@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunset Party</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--coral:#FF6B47;--orange:#FF9A3C;--gold:#FFD166;--sky:#1a1a2e;--deep:#16213e;--pink:#FF8FAB}
+  body{font-family:'DM Sans',sans-serif;background:var(--sky);color:#fff;min-height:100vh;overflow-x:hidden}
+  nav{position:fixed;top:1rem;right:1rem;z-index:100}
+  nav button{color:rgba(255,255,255,0.5);font-size:0.75rem;background:rgba(0,0,0,0.4);border:none;padding:0.4rem 0.8rem;border-radius:20px;cursor:pointer}
+  .page{display:none}.page.active{display:block}
+
+  /* HERO */
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;overflow:hidden}
+  .sky-bg{position:absolute;inset:0;background:linear-gradient(180deg,#0d0d1a 0%,#1a1040 12%,#3d1260 25%,#8B1A4A 38%,#d44060 50%,#e8604a 62%,#f07030 72%,#f5a040 82%,#ffd166 92%,#ffe599 100%);z-index:0;animation:sky-pulse 4s ease-in-out infinite alternate}
+  @keyframes sky-pulse{0%{filter:hue-rotate(0deg) brightness(1)}100%{filter:hue-rotate(8deg) brightness(1.08)}}
+  .stars{position:absolute;top:0;left:0;right:0;height:40%;z-index:1}
+  .star{position:absolute;width:2px;height:2px;background:white;border-radius:50%;animation:twinkle 2s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:0.15}50%{opacity:1}}
+  .sun{position:absolute;bottom:19%;left:50%;transform:translateX(-50%);width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,#fff5e0 0%,#ffdf70 35%,#ff9040 65%,#ff4060 85%,#cc2050 100%);box-shadow:0 0 80px 40px rgba(255,80,60,0.6),0 0 160px 80px rgba(255,60,80,0.3);z-index:1;animation:pulse-sun 3s ease-in-out infinite}
+  @keyframes pulse-sun{0%,100%{box-shadow:0 0 80px 40px rgba(255,80,60,0.6),0 0 160px 80px rgba(255,60,80,0.3)}50%{box-shadow:0 0 110px 55px rgba(255,100,50,0.75),0 0 220px 110px rgba(255,50,100,0.35)}}
+  .sun::before{content:'';position:absolute;inset:-30px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(255,150,50,0.12) 10deg,transparent 20deg,rgba(255,100,80,0.08) 30deg,transparent 40deg,rgba(255,150,50,0.12) 50deg,transparent 60deg,rgba(255,100,80,0.08) 70deg,transparent 80deg,rgba(255,150,50,0.12) 90deg,transparent 100deg,rgba(255,100,80,0.08) 110deg,transparent 120deg,rgba(255,150,50,0.12) 130deg,transparent 140deg,rgba(255,100,80,0.08) 150deg,transparent 160deg,rgba(255,150,50,0.12) 170deg,transparent 180deg,rgba(255,100,80,0.08) 190deg,transparent 200deg,rgba(255,150,50,0.12) 210deg,transparent 220deg,rgba(255,100,80,0.08) 230deg,transparent 240deg,rgba(255,150,50,0.12) 250deg,transparent 260deg,rgba(255,100,80,0.08) 270deg,transparent 280deg,rgba(255,150,50,0.12) 290deg,transparent 300deg,rgba(255,100,80,0.08) 310deg,transparent 320deg,rgba(255,150,50,0.12) 330deg,transparent 340deg,rgba(255,100,80,0.08) 350deg,transparent 360deg);animation:rotate-rays 12s linear infinite}
+  @keyframes rotate-rays{to{transform:rotate(360deg)}}
+  .ocean{position:absolute;bottom:0;left:0;right:0;height:21%;z-index:2;overflow:hidden}
+  .wave{position:absolute;width:200%;height:100%}
+  .wave svg{width:100%;height:100%}
+  .wave1{animation:wave-move 6s linear infinite;opacity:0.85}
+  .wave2{animation:wave-move 9s linear infinite reverse;opacity:0.5;bottom:-10px}
+  @keyframes wave-move{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .hero-content{position:relative;z-index:10;animation:fade-up 1s ease forwards}
+  @keyframes fade-up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .emoji-row{font-size:2rem;letter-spacing:0.5rem;margin-bottom:1rem}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,10vw,6rem);font-weight:700;line-height:1;background:linear-gradient(135deg,#fff8e1,#ffd166,#ff9a3c,#ff5060,#ff8fab);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.3rem}
+  .subtitle{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1rem,3vw,1.4rem);color:rgba(255,255,255,0.8);margin-bottom:1.5rem;letter-spacing:0.15rem}
+
+  /* ANNONCE WIDGET */
+  .annonce-widget{position:relative;z-index:10;margin-bottom:1.2rem;max-width:480px;width:100%}
+  .annonce-box{background:linear-gradient(135deg,rgba(255,60,100,0.2),rgba(255,100,50,0.15));border:1.5px solid rgba(255,143,171,0.5);border-radius:18px;padding:1rem 1.4rem;color:white;font-size:1rem;text-align:center;display:none;animation:fade-up 0.5s ease;box-shadow:0 4px 20px rgba(255,80,100,0.2)}
+  .annonce-box.visible{display:block}
+  .annonce-box .annonce-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2rem;color:var(--pink);margin-bottom:0.3rem}
+  .annonce-box .annonce-text-content{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
+
+  /* COUNTDOWN */
+  .countdown-section{position:relative;z-index:10;margin-top:0.5rem}
+  .countdown-label{font-size:0.8rem;letter-spacing:0.3rem;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+  .countdown{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .cd-box{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,215,100,0.3);border-radius:16px;padding:0.8rem 1.2rem;min-width:70px;text-align:center}
+  .cd-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1}
+  .cd-unit{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15rem;color:rgba(255,255,255,0.6);margin-top:0.2rem}
+  .scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:10;animation:bounce 2s ease-in-out infinite;color:rgba(255,255,255,0.5);font-size:1.5rem}
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+  /* CARDS */
+  .cards-section{background:linear-gradient(180deg,var(--deep) 0%,#0d0d1a 100%);padding:4rem 1.5rem}
+  .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);text-align:center;margin-bottom:2.5rem;background:linear-gradient(135deg,var(--gold),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+  .card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,215,100,0.2);border-radius:24px;padding:2rem;backdrop-filter:blur(10px);transition:transform 0.3s,border-color 0.3s}
+  .card:hover{transform:translateY(-4px);border-color:rgba(255,154,60,0.5)}
+  .card-icon{font-size:2.5rem;margin-bottom:1rem;display:block}
+  .card h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);margin-bottom:0.8rem}
+  .card p,.card li{color:rgba(255,255,255,0.75);font-size:0.95rem;line-height:1.6}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+  .card li::before{content:'🌸 '}
+  .note{background:rgba(255,143,171,0.1);border:1px solid rgba(255,143,171,0.3);border-radius:12px;padding:0.8rem 1rem;font-size:0.85rem;color:var(--pink);margin-top:0.8rem;font-style:italic}
+  .app-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,107,71,0.2);border:1px solid var(--coral);border-radius:50px;padding:0.4rem 1rem;font-size:0.85rem;color:var(--coral);font-weight:500;margin-top:0.6rem}
+  .form-cta{text-align:center;padding:3rem 1rem;background:#0d0d1a}
+  .btn-form{display:inline-block;background:linear-gradient(135deg,var(--coral),var(--pink));color:white;font-family:'Playfair Display',serif;font-size:1.2rem;padding:1rem 2.5rem;border-radius:50px;cursor:pointer;border:none;box-shadow:0 8px 30px rgba(255,107,71,0.4);transition:transform 0.2s,box-shadow 0.2s}
+  .btn-form:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,107,71,0.5)}
+
+  /* FORM PAGE */
+  .form-page{min-height:100vh;background:linear-gradient(135deg,#0d0d1a,#1a1040,#2d0a30);padding:3rem 1.5rem}
+  .form-container{max-width:600px;margin:0 auto}
+  .form-header{text-align:center;margin-bottom:2.5rem}
+  .form-header h2{font-family:'Playfair Display',serif;font-size:2rem;background:linear-gradient(135deg,var(--gold),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem}
+  .form-header p{color:rgba(255,255,255,0.6);font-size:0.95rem}
+  .form-group{margin-bottom:1.5rem}
+  .form-group label{display:block;color:var(--gold);font-size:0.9rem;margin-bottom:0.5rem;font-weight:500}
+  .form-group input,.form-group textarea{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,215,100,0.2);border-radius:12px;padding:0.8rem 1rem;color:white;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.2s}
+  .form-group input:focus,.form-group textarea:focus{border-color:var(--coral)}
+  .form-group textarea{resize:vertical;min-height:80px}
+  .radio-group{display:flex;gap:1rem;flex-wrap:wrap}
+  .radio-btn{position:relative}
+  .radio-btn input{position:absolute;opacity:0}
+  .radio-btn label{display:block;padding:0.5rem 1.2rem;border:1px solid rgba(255,215,100,0.3);border-radius:50px;cursor:pointer;font-size:0.9rem;color:rgba(255,255,255,0.7);transition:all 0.2s}
+  .radio-btn input:checked+label{background:var(--coral);border-color:var(--coral);color:white}
+  .radio-btn label:hover{border-color:var(--coral)}
+  .btn-submit{width:100%;padding:1rem;background:linear-gradient(135deg,var(--coral),var(--pink));color:white;border:none;border-radius:50px;font-family:'Playfair Display',serif;font-size:1.2rem;cursor:pointer;box-shadow:0 8px 30px rgba(255,107,71,0.4);transition:transform 0.2s;margin-top:1rem}
+  .btn-submit:hover{transform:translateY(-2px)}
+  .btn-back{background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:0.85rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.4rem}
+  .btn-back:hover{color:white}
+  .success-msg{display:none;text-align:center;padding:3rem 1rem}
+  .success-msg.show{display:block}
+  .success-msg .big-emoji{font-size:4rem;margin-bottom:1rem}
+  .success-msg h3{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold);margin-bottom:0.8rem}
+  .success-msg p{color:rgba(255,255,255,0.7);line-height:1.6}
+  .success-msg .reassurance{margin-top:1.5rem;background:rgba(255,143,171,0.1);border:1px solid rgba(255,143,171,0.3);border-radius:16px;padding:1.2rem;color:var(--pink);font-style:italic}
+
+  /* ADMIN */
+  .admin-page{min-height:100vh;background:#0d0d1a;padding:3rem 1.5rem}
+  .admin-container{max-width:800px;margin:0 auto}
+  .admin-login{max-width:350px;margin:10vh auto;text-align:center}
+  .admin-login h2{font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:1.5rem;font-size:1.8rem}
+  .admin-login input{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,215,100,0.2);border-radius:12px;padding:0.8rem 1rem;color:white;font-size:1rem;outline:none;text-align:center;letter-spacing:0.2rem;margin-bottom:1rem}
+  .admin-login button{width:100%;padding:0.8rem;background:linear-gradient(135deg,var(--coral),var(--orange));color:white;border:none;border-radius:50px;font-size:1rem;cursor:pointer}
+  .admin-err{color:#ff6b6b;font-size:0.85rem;margin-top:0.5rem;display:none}
+  .admin-panel{display:none}
+  .admin-tabs{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+  .tab-btn{padding:0.6rem 1.4rem;border-radius:50px;border:1px solid rgba(255,215,100,0.3);background:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+  .tab-btn.active,.tab-btn:hover{background:var(--coral);border-color:var(--coral);color:white}
+  .tab-content{display:none}.tab-content.active{display:block}
+  .admin-panel h2{font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:0.5rem}
+  .admin-panel .count{color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:2rem}
+  .response-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,215,100,0.15);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+  .resp-name{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:0.8rem}
+  .resp-row{display:flex;gap:0.5rem;margin-bottom:0.4rem;font-size:0.9rem}
+  .resp-label{color:rgba(255,255,255,0.4);min-width:160px;flex-shrink:0}
+  .resp-val{color:rgba(255,255,255,0.85)}
+  .no-responses{text-align:center;color:rgba(255,255,255,0.3);padding:3rem;font-style:italic}
+
+  /* EDIT */
+  .edit-section{margin-bottom:2.5rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,215,100,0.1);border-radius:20px;padding:1.5rem}
+  .edit-section h3{font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:0.4rem;font-size:1.15rem}
+  .edit-section .edit-desc{color:rgba(255,255,255,0.35);font-size:0.8rem;margin-bottom:1.2rem}
+  .edit-group{margin-bottom:1rem}
+  .edit-group label{display:block;color:rgba(255,255,255,0.55);font-size:0.82rem;margin-bottom:0.4rem}
+  .edit-group input,.edit-group textarea{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,215,100,0.2);border-radius:12px;padding:0.7rem 1rem;color:white;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s}
+  .edit-group input:focus,.edit-group textarea:focus{border-color:var(--coral)}
+  .edit-group textarea{resize:vertical;min-height:70px}
+  .edit-actions{display:flex;align-items:center;gap:1rem;margin-top:0.5rem}
+  .btn-save{padding:0.65rem 1.8rem;background:linear-gradient(135deg,var(--coral),var(--orange));color:white;border:none;border-radius:50px;font-size:0.9rem;cursor:pointer;transition:transform 0.2s}
+  .btn-save:hover{transform:translateY(-2px)}
+  .save-ok{color:#4ade80;font-size:0.85rem;display:none}
+
+  footer{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.3);font-size:0.85rem;background:#0d0d1a}
+  footer span{color:var(--coral)}
+</style>
+</head>
+<body>
+
+<nav><button onclick="showPage('admin')">🔒</button></nav>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="sky-bg"></div>
+    <div class="stars" id="stars"></div>
+    <div class="sun"></div>
+    <div class="ocean">
+      <div class="wave wave1"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z" fill="#1a3a5c" opacity="0.9"/><path d="M0,80 C240,40 480,100 720,80 C960,60 1200,100 1440,80 L1440,120 L0,120 Z" fill="#0d2137" opacity="0.7"/></svg></div>
+      <div class="wave wave2"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C360,30 720,110 1080,70 C1260,50 1380,80 1440,70 L1440,120 L0,120 Z" fill="#112a40" opacity="0.6"/></svg></div>
+    </div>
+    <div class="hero-content">
+      <div class="emoji-row">🌅 🌊 ☀️ 🌊 🌅</div>
+      <h1 id="site-title">Sunset Party</h1>
+      <p class="subtitle" id="site-subtitle">Une soirée magique au coucher du soleil</p>
+      <div class="annonce-widget">
+        <div class="annonce-box" id="annonce-box">
+          <div class="annonce-label">📣 Annonce importante</div>
+          <div class="annonce-text-content" id="annonce-text"></div>
+        </div>
+      </div>
+      <div class="countdown-section">
+        <p class="countdown-label">✨ Le grand jour dans ✨</p>
+        <div class="countdown">
+          <div class="cd-box"><div class="cd-num" id="days">--</div><div class="cd-unit">jours</div></div>
+          <div class="cd-box"><div class="cd-num" id="hours">--</div><div class="cd-unit">heures</div></div>
+          <div class="cd-box"><div class="cd-num" id="mins">--</div><div class="cd-unit">minutes</div></div>
+          <div class="cd-box"><div class="cd-num" id="secs">--</div><div class="cd-unit">secondes</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">↓</div>
+  </section>
+
+  <section class="cards-section">
+    <h2 class="section-title">📋 Toutes les infos</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <span class="card-icon">📅</span>
+        <h3>Quand &amp; Où ?</h3>
+        <ul>
+          <li id="card-date">Le <strong>30 juin</strong></li>
+          <li id="card-hours">De <strong>16h30</strong> à <strong>23h30</strong></li>
+          <li id="card-lieu">Chez moi, dans le jardin 🌿</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="card-icon">👙</span>
+        <h3>Qu'est-ce qu'on apporte ?</h3>
+        <ul>
+          <li>Ton <strong>maillot de bain</strong></li>
+          <li>Une <strong>serviette</strong></li>
+          <li>Des <strong>claquettes</strong></li>
+          <li>Des <strong>lunettes de piscine</strong> si tu veux !</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="card-icon">📱</span>
+        <h3>L'appli POV</h3>
+        <p>Pour qu'on garde des souvenirs top, installe l'appli <strong>POV</strong> sur ton téléphone avant de venir !</p>
+        <div class="app-badge">📲 Appli POV à télécharger</div>
+        <div class="note">Pas de téléphone ? Aucun problème du tout ! L'essentiel c'est d'être là 🥰</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-cta">
+    <p style="color:rgba(255,255,255,0.6);margin-bottom:1.5rem;font-size:0.95rem;">Réponds à quelques petites questions pour que la fête soit parfaite 🌸</p>
+    <button class="btn-form" onclick="showPage('form')">Remplir mon formulaire ✨</button>
+  </div>
+  <footer>Fait avec <span>♥</span> pour ma Sunset Party 🌅</footer>
+</div>
+
+<!-- FORM -->
+<div id="page-form" class="page">
+  <div class="form-page">
+    <div class="form-container">
+      <button class="btn-back" onclick="showPage('home')">← Retour</button>
+      <div class="form-header">
+        <h2>🌸 Ton petit formulaire</h2>
+        <p>Quelques questions pour que la fête soit parfaite pour tout le monde !</p>
+      </div>
+      <div id="form-content">
+        <div class="form-group">
+          <label>Comment tu t'appelles ? 🌟</label>
+          <input type="text" id="f-name" placeholder="Ton prénom">
+        </div>
+        <div class="form-group">
+          <label>Est-ce que tu sais nager ? 🏊</label>
+          <div class="radio-group">
+            <div class="radio-btn"><input type="radio" name="swim" id="swim-yes" value="Oui je sais nager"><label for="swim-yes">Oui !</label></div>
+            <div class="radio-btn"><input type="radio" name="swim" id="swim-a-bit" value="Un peu"><label for="swim-a-bit">Un peu</label></div>
+            <div class="radio-btn"><input type="radio" name="swim" id="swim-no" value="Pas vraiment"><label for="swim-no">Pas vraiment</label></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tu te sens comment à l'idée de venir ? 🦋</label>
+          <div class="radio-group">
+            <div class="radio-btn"><input type="radio" name="feel" id="feel-exc" value="Super excitee"><label for="feel-exc">Super excitée ! 🎉</label></div>
+            <div class="radio-btn"><input type="radio" name="feel" id="feel-ok" value="Bien"><label for="feel-ok">Bien 🙂</label></div>
+            <div class="radio-btn"><input type="radio" name="feel" id="feel-shy" value="Un peu timide"><label for="feel-shy">Un peu timide 🥺</label></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tu as des allergies ? 🌿</label>
+          <textarea id="f-allergies" placeholder="Ex: je suis allergique aux fraises... ou aucune !"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Y a des choses que tu n'aimes pas du tout ? 😬</label>
+          <textarea id="f-dislikes" placeholder="Ex: j'aime pas les araignées, la musique trop forte..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tu as quelque chose de spécial à me dire ? 💌</label>
+          <textarea id="f-special" placeholder="Un truc que tu veux que je sache, une question..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tu confirmes ta présence ? 🎈</label>
+          <div class="radio-group">
+            <div class="radio-btn"><input type="radio" name="coming" id="c-yes" value="Je viens !"><label for="c-yes">Je viens ! 🙌</label></div>
+            <div class="radio-btn"><input type="radio" name="coming" id="c-maybe" value="Pas encore sure"><label for="c-maybe">Pas encore sûre</label></div>
+            <div class="radio-btn"><input type="radio" name="coming" id="c-no" value="Je peux pas venir"><label for="c-no">Je peux pas 😢</label></div>
+          </div>
+        </div>
+        <button class="btn-submit" onclick="submitForm()">Envoyer 🌅</button>
+      </div>
+      <div class="success-msg" id="success-msg">
+        <div class="big-emoji">🌅✨</div>
+        <h3>Merci trop !</h3>
+        <p>Ton formulaire est bien envoyé. J'ai hâte de te voir le 30 juin !</p>
+        <div class="reassurance">Pas de stress pour quoi que ce soit — on va juste passer une super soirée ensemble, se baigner, rigoler et profiter du coucher de soleil. T'inquiète pour rien, t'es attendue avec impatience 🥰🌸</div>
+        <br>
+        <button class="btn-form" onclick="showPage('home')" style="margin-top:1rem">Retour à l'accueil 🏠</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="page-admin" class="page">
+  <div class="admin-page">
+    <div class="admin-container">
+      <div class="admin-login" id="admin-login">
+        <h2>🔒 Page secrète</h2>
+        <p style="color:rgba(255,255,255,0.4);margin-bottom:1.5rem;font-size:0.85rem;">Que pour Juliette 🌸</p>
+        <input type="password" id="admin-pwd" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()">
+        <button onclick="checkPwd()">Entrer ✨</button>
+        <p class="admin-err" id="admin-err">Mauvais mot de passe 😅</p>
+      </div>
+
+      <div class="admin-panel" id="admin-panel">
+        <button class="btn-back" onclick="showPage('home')">← Retour à la fête</button>
+        <h2>✨ Mon espace Juliette</h2>
+        <p class="count">Gère ta Sunset Party 🌅</p>
+        <div class="admin-tabs">
+          <button class="tab-btn active" onclick="switchTab(event,'responses')">📋 Réponses</button>
+          <button class="tab-btn" onclick="switchTab(event,'edit')">✏️ Modifier le site</button>
+        </div>
+
+        <!-- REPONSES -->
+        <div id="tab-responses" class="tab-content active">
+          <p id="resp-count" style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:1.5rem"></p>
+          <div id="responses-list"></div>
+        </div>
+
+        <!-- MODIFIER -->
+        <div id="tab-edit" class="tab-content">
+
+          <div class="edit-section">
+            <h3>📣 Annonce spéciale</h3>
+            <p class="edit-desc">S'affiche en grand widget sur la page d'accueil — parfait pour annoncer un changement !</p>
+            <div class="edit-group">
+              <label>Ton message (laisse vide pour masquer le widget)</label>
+              <textarea id="edit-annonce" placeholder="Ex: Finalement on commence à 17h ! Amenez aussi une bouée 🎉"></textarea>
+            </div>
+            <div class="edit-actions">
+              <button class="btn-save" onclick="saveEdit('annonce')">Publier l'annonce</button>
+              <span class="save-ok" id="ok-annonce">✅ Publié !</span>
+            </div>
+          </div>
+
+          <div class="edit-section">
+            <h3>📅 Date &amp; Heure</h3>
+            <p class="edit-desc">Modifie la date affichée et l'heure du compte à rebours</p>
+            <div class="edit-group">
+              <label>Date affichée (ex: 30 juin)</label>
+              <input type="text" id="edit-date" placeholder="30 juin">
+            </div>
+            <div class="edit-group">
+              <label>Heure de début</label>
+              <input type="text" id="edit-hstart" placeholder="16h30">
+            </div>
+            <div class="edit-group">
+              <label>Heure de fin</label>
+              <input type="text" id="edit-hend" placeholder="23h30">
+            </div>
+            <div class="edit-group">
+              <label>Date du compte à rebours</label>
+              <input type="date" id="edit-cddate">
+            </div>
+            <div class="edit-group">
+              <label>Heure du compte à rebours</label>
+              <input type="time" id="edit-cdtime">
+            </div>
+            <div class="edit-actions">
+              <button class="btn-save" onclick="saveEdit('date')">Sauvegarder</button>
+              <span class="save-ok" id="ok-date">✅ Sauvegardé !</span>
+            </div>
+          </div>
+
+          <div class="edit-section">
+            <h3>📍 Lieu</h3>
+            <div class="edit-group">
+              <label>Description du lieu</label>
+              <input type="text" id="edit-lieu" placeholder="Chez moi, dans le jardin 🌿">
+            </div>
+            <div class="edit-actions">
+              <button class="btn-save" onclick="saveEdit('lieu')">Sauvegarder</button>
+              <span class="save-ok" id="ok-lieu">✅ Sauvegardé !</span>
+            </div>
+          </div>
+
+          <div class="edit-section">
+            <h3>✏️ Titre &amp; sous-titre</h3>
+            <div class="edit-group">
+              <label>Titre principal</label>
+              <input type="text" id="edit-title" placeholder="Sunset Party">
+            </div>
+            <div class="edit-group">
+              <label>Sous-titre</label>
+              <input type="text" id="edit-subtitle" placeholder="Une soirée magique au coucher du soleil">
+            </div>
+            <div class="edit-actions">
+              <button class="btn-save" onclick="saveEdit('title')">Sauvegarder</button>
+              <span class="save-ok" id="ok-title">✅ Sauvegardé !</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Stars
+  const starsEl=document.getElementById('stars');
+  for(let i=0;i<70;i++){const s=document.createElement('div');s.classList.add('star');s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;width:${Math.random()*2.5+1}px;height:${Math.random()*2.5+1}px;opacity:${Math.random()*0.5+0.1}`;starsEl.appendChild(s)}
+
+  // Storage
+  const SKEY='sunset_settings',RKEY='sunset_responses';
+  function getSettings(){try{return JSON.parse(localStorage.getItem(SKEY)||'{}')}catch{return{}}}
+  function saveSetting(k,v){const s=getSettings();s[k]=v;localStorage.setItem(SKEY,JSON.stringify(s))}
+  function getResponses(){try{return JSON.parse(localStorage.getItem(RKEY)||'[]')}catch{return[]}}
+  function saveResponse(r){const a=getResponses();a.push(r);localStorage.setItem(RKEY,JSON.stringify(a))}
+
+  // Apply settings
+  window.countdownTarget=new Date('2026-06-30T16:30:00');
+  function applySettings(){
+    const s=getSettings();
+    if(s.title)document.getElementById('site-title').textContent=s.title;
+    if(s.subtitle)document.getElementById('site-subtitle').textContent=s.subtitle;
+    if(s.date)document.getElementById('card-date').innerHTML='Le <strong>'+s.date+'</strong>';
+    if(s.hstart||s.hend){const hs=s.hstart||'16h30',he=s.hend||'23h30';document.getElementById('card-hours').innerHTML='De <strong>'+hs+'</strong> à <strong>'+he+'</strong>'}
+    if(s.lieu)document.getElementById('card-lieu').textContent=s.lieu;
+    if(s.annonce&&s.annonce.trim()){document.getElementById('annonce-text').textContent=s.annonce;document.getElementById('annonce-box').classList.add('visible')}
+    else{document.getElementById('annonce-box').classList.remove('visible')}
+    if(s.cddate||s.cdtime){const d=s.cddate||'2026-06-30',t=s.cdtime||'16:30';window.countdownTarget=new Date(d+'T'+t+':00')}
+  }
+  applySettings();
+
+  // Countdown
+  function updateCountdown(){
+    const diff=window.countdownTarget-new Date();
+    if(diff<=0){['days','hours','mins','secs'].forEach(id=>document.getElementById(id).textContent='🎉');return}
+    document.getElementById('days').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('hours').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('mins').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('secs').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  updateCountdown();setInterval(updateCountdown,1000);
+
+  // Pages
+  function showPage(name){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+name).classList.add('active');
+    window.scrollTo(0,0);
+    if(name==='admin'){document.getElementById('admin-login').style.display='block';document.getElementById('admin-panel').style.display='none';document.getElementById('admin-pwd').value='';document.getElementById('admin-err').style.display='none'}
+  }
+
+  // Form
+  function submitForm(){
+    const name=document.getElementById('f-name').value.trim();
+    if(!name){alert('Mets ton prénom stp 🌸');return}
+    const swim=document.querySelector('input[name="swim"]:checked');
+    const feel=document.querySelector('input[name="feel"]:checked');
+    const coming=document.querySelector('input[name="coming"]:checked');
+    const r={date:new Date().toLocaleString('fr-FR'),name,swim:swim?swim.value:'Non renseigné',feel:feel?feel.value:'Non renseigné',allergies:document.getElementById('f-allergies').value.trim()||'Aucune',dislikes:document.getElementById('f-dislikes').value.trim()||'Rien de spécial',special:document.getElementById('f-special').value.trim()||'-',coming:coming?coming.value:'Non renseigné'};
+    saveResponse(r);
+    const msg=encodeURIComponent('🌅 Sunset Party - Réponse de '+r.name+' !\n🎈 Vient: '+r.coming+'\n🏊 Nage: '+r.swim+'\n🌿 Allergies: '+r.allergies+'\n💬 '+r.special);
+    const a=document.createElement('a');a.href='sms:+33658967360?body='+msg;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);
+    document.getElementById('form-content').style.display='none';
+    document.getElementById('success-msg').classList.add('show');
+  }
+
+  // Admin
+  function checkPwd(){
+    if(document.getElementById('admin-pwd').value==='Juju!'){
+      document.getElementById('admin-login').style.display='none';
+      document.getElementById('admin-panel').style.display='block';
+      loadResponses();loadEditFields();
+    }else{document.getElementById('admin-err').style.display='block'}
+  }
+
+  function switchTab(event,name){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+    event.target.classList.add('active');
+    if(name==='responses')loadResponses();
+    if(name==='edit')loadEditFields();
+  }
+
+  function loadResponses(){
+    const all=getResponses();
+    document.getElementById('resp-count').textContent=all.length===0?'Aucune réponse pour l\'instant 🌸':all.length+' réponse'+(all.length>1?'s':'')+' reçue'+(all.length>1?'s':'')+' 🎉';
+    const list=document.getElementById('responses-list');
+    if(!all.length){list.innerHTML='<div class="no-responses">Les réponses apparaîtront ici ✨</div>';return}
+    list.innerHTML=[...all].reverse().map(r=>`<div class="response-card"><div class="resp-name">🌸 ${r.name}</div><div class="resp-row"><span class="resp-label">📅 Reçu le</span><span class="resp-val">${r.date}</span></div><div class="resp-row"><span class="resp-label">🎈 Présence</span><span class="resp-val">${r.coming}</span></div><div class="resp-row"><span class="resp-label">🏊 Natation</span><span class="resp-val">${r.swim}</span></div><div class="resp-row"><span class="resp-label">🦋 Ressenti</span><span class="resp-val">${r.feel}</span></div><div class="resp-row"><span class="resp-label">🌿 Allergies</span><span class="resp-val">${r.allergies}</span></div><div class="resp-row"><span class="resp-label">😬 N'aime pas</span><span class="resp-val">${r.dislikes}</span></div><div class="resp-row"><span class="resp-label">💌 Message</span><span class="resp-val">${r.special}</span></div></div>`).join('');
+  }
+
+  function loadEditFields(){
+    const s=getSettings();
+    document.getElementById('edit-annonce').value=s.annonce||'';
+    document.getElementById('edit-date').value=s.date||'30 juin';
+    document.getElementById('edit-hstart').value=s.hstart||'16h30';
+    document.getElementById('edit-hend').value=s.hend||'23h30';
+    document.getElementById('edit-cddate').value=s.cddate||'2026-06-30';
+    document.getElementById('edit-cdtime').value=s.cdtime||'16:30';
+    document.getElementById('edit-lieu').value=s.lieu||'Chez moi, dans le jardin 🌿';
+    document.getElementById('edit-title').value=s.title||'Sunset Party';
+    document.getElementById('edit-subtitle').value=s.subtitle||'Une soirée magique au coucher du soleil';
+  }
+
+  function saveEdit(section){
+    if(section==='annonce')saveSetting('annonce',document.getElementById('edit-annonce').value);
+    else if(section==='date'){
+      saveSetting('date',document.getElementById('edit-date').value);
+      saveSetting('hstart',document.getElementById('edit-hstart').value);
+      saveSetting('hend',document.getElementById('edit-hend').value);
+      saveSetting('cddate',document.getElementById('edit-cddate').value);
+      saveSetting('cdtime',document.getElementById('edit-cdtime').value);
+      const d=document.getElementById('edit-cddate').value||'2026-06-30';
+      const t=document.getElementById('edit-cdtime').value||'16:30';
+      window.countdownTarget=new Date(d+'T'+t+':00');
+    }
+    else if(section==='lieu')saveSetting('lieu',document.getElementById('edit-lieu').value);
+    else if(section==='title'){saveSetting('title',document.getElementById('edit-title').value);saveSetting('subtitle',document.getElementById('edit-subtitle').value)}
+    applySettings();
+    const ok=document.getElementById('ok-'+section);ok.style.display='inline';setTimeout(()=>ok.style.display='none',2000);
+  }
+</script>
+</body>
+</html>
